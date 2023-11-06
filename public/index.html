@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Chatting</title>
+    <script>
+        const ws = new WebSocket("ws://localhost:8001")
+
+        // function sayHi() {
+        //     ws.send("Hello") // 서버에 데이터 전송
+        // }
+        function clearMessage() {
+            document.getElementById("message").value = ""
+        }
+
+        // 메세지 전송
+        function sendMessage() {
+            const nickname = document.getElementById("nickname").value
+            const message = document.getElementById("message").value
+            const fullMessage = `${nickname}: ${message}`
+
+            ws.send(fullMessage)
+            // 클라이언트에서도 메세지를 보내면, input 공백만들어주기
+            clearMessage()
+        }
+
+        // 메세지 수신
+        function receiveMessage(event) {
+            const chat = document.createElement("div")
+            const message = document.createTextNode(event.data)
+            chat.appendChild(message)
+
+            const chatLog = document.getElementById("chat-log")
+            chatLog.appendChild(chat)
+        }
+
+        ws.onmessage = receiveMessage
+    </script>
+</head>
+<body>
+<!--클라이언트-->
+<h1>summer websocket chat web!!!</h1>
+<!--<button onClick="sayHi()">Say Hi</button>-->
+
+<div>
+    <input
+            type="text"
+            id="nickname"
+            placeholder="닉네임"
+            style="width: 50px"
+    />
+    <input
+            type="text"
+            id="message"
+            placeholder="메세지"
+            style="width: 200px"
+    />
+    <button onClick="sendMessage()">전송</button>
+</div>
+
+<div id="chat-log"></div>
+</body>
+</html>
